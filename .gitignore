@@ -1,0 +1,56 @@
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Dependency directories
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Environment files
+.env
+.env.*
+
+# Cache and temporary files
+*.cache
+*.tmp
+*.temp
+*.pid
+*.seed
+*.pid.lock
+
+# TypeScript specific
+*.tsbuildinfo
+
+# Coverage output from testing
+coverage/
+.nyc_output/
+
+# IDE and editor configurations
+.vscode/
+.idea/
+
+# System files
+.DS_Store          
+Thumbs.db          
+desktop.ini     
+
+# Lock files (optional, depending on team preference)
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Testing files
+*.spec.*
+*.test.*
+
+# Git-specific
+*.diff
+*.patch
+node_modules
