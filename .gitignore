@@ -15,7 +15,9 @@ build/
 
 # Environment files
 .env
-.env.*
+.env.development
+.env.test
+.env.production
 
 # Cache and temporary files
 *.cache
@@ -47,6 +49,7 @@ yarn.lock
 pnpm-lock.yaml
 
 # Testing files
+tests
 *.spec.*
 *.test.*
 
