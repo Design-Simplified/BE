@@ -1,11 +1,9 @@
 import dotenv from 'dotenv';
 
-import {
-  DEV_ENV_FILE,
-  PROD_ENV,
-  PROD_ENV_FILE,
-} from '../constants/env-constants';
+import { Env } from '../constants';
 
 const envFile =
-  process.env.NODE_ENV === PROD_ENV ? PROD_ENV_FILE : DEV_ENV_FILE;
+  process.env.NODE_ENV === Env.PRODUCTION
+    ? Env.PRODUCTION_ENV_FILE
+    : Env.DEVELOPMENT_ENV_FILE;
 dotenv.config({ path: envFile });

@@ -25,6 +25,8 @@ export const successResponse = (
 };
 
 export const errorResponse = (res: Response, error: Error): void => {
+  console.error(error);
+
   if (error instanceof ResponseError) {
     res.status(error.status).json({
       errorCode: error.status,

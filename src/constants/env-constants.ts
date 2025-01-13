@@ -1,5 +1,7 @@
-export const DEV_ENV = 'development';
-export const PROD_ENV = 'production';
-
-export const DEV_ENV_FILE = '.env.development';
-export const PROD_ENV_FILE = '.env.production';
+export enum Env {
+  DEVELOPMENT = 'development',
+  TESTING = 'testing',
+  PRODUCTION = 'production',
+  DEVELOPMENT_ENV_FILE = '.env.development',
+  PRODUCTION_ENV_FILE = '.env.production',
+}

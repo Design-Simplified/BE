@@ -14,20 +14,39 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  name      String
-  password  String
-  roleId    Int      @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  role      Role     @relation(fields: [roleId], references: [id])
+  id             String       @id @default(uuid()) @map("id")
+  email          String?      @unique @map("email")
+  username       String       @map("username")
+  profilePicture String?      @map("profile_picture")
+  roleId         Int          @map("role_id")
+  createdAt      DateTime     @default(now()) @map("created_at")
+  updatedAt      DateTime     @updatedAt @map("updated_at")
+  role           Role         @relation(fields: [roleId], references: [id])
+  authMethod     AuthMethod[]
+
+  @@index(email)
+  @@map("users")
+}
+
+model AuthMethod {
+  id         Int      @id @default(autoincrement()) @map("id")
+  userId     String   @map("user_id")
+  provider   String   @map("provider")
+  providerId String   @unique @map("provider_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+  user       User     @relation(fields: [userId], references: [id])
+
+  @@index([userId, provider])
+  @@map("auth_methods")
 }
 
 model Role {
-  id        Int      @id @default(autoincrement())
-  name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  user      User?
+  id        Int      @id @default(autoincrement()) @map("id")
+  name      String   @map("name")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  users     User[]   @relation
+
+  @@map("roles")
 }

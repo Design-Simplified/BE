@@ -1,7 +1,7 @@
 import { StatusCodes } from 'http-status-codes';
 
 import { ResponseError } from '../error/ResponseError';
-import { HealthRepository } from '../repositories/HealthRepository';
+import { HealthRepository } from '../repositories';
 
 export class HealthService {
   static async getHealth(): Promise<void> {

@@ -5,18 +5,30 @@ import cors from 'cors';
 import express, { Express } from 'express';
 import requestip from 'request-ip';
 
+import { Env } from './constants';
+import { ClientUrl } from './constants/client-url-constants';
 import { errorMiddleware } from './middlewares/error-middleware';
-import { healthRoute } from './routes/HealthRoute';
+import { healthRoute, authRoute } from './routes';
 
 const app: Express = express();
 
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 
+let origin;
+
+if (process.env.NODE_ENV === Env.DEVELOPMENT) {
+  origin = ClientUrl.Development;
+} else if (process.env.NODE_ENV === Env.TESTING) {
+  origin = ClientUrl.Testing;
+} else if (process.env.NODE_ENV === Env.PRODUCTION) {
+  origin = ClientUrl.Production;
+}
+
 app.use(
   cors({
     credentials: true,
-    origin: ['http://localhost:3000'],
+    origin: origin,
   }),
 );
 
@@ -24,6 +36,7 @@ app.use(express.json());
 app.use(requestip.mw());
 
 app.use('/api/', healthRoute);
+app.use('/api/auth/', authRoute);
 app.use(errorMiddleware);
 
 const port = Number(process.env.PORT_SERVER) || 5000;
