@@ -6,7 +6,7 @@
     "prepare": "husky",
     "test": "jest --detectOpenHandles",
     "dev": "nodemon",
-    "build": "pnpx tsc",
+    "build": "pnpm exec tsc",
     "lint": "eslint --fix",
     "format": "prettier --write 'src/**/*.ts'",
     "up": "sudo docker-compose up -d",
