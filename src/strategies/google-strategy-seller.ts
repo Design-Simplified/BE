@@ -1,18 +1,16 @@
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 
-import { OAUTH_SECRET, Role } from '../constants';
-import type { IAuthDTO } from '../dtos/AuthDto';
+import { OAUTH_SECRET, Role, UserState } from '../constants';
 
 const googleConfig = {
   clientID: OAUTH_SECRET.GOOGLE_CLIENT_ID,
   clientSecret: OAUTH_SECRET.GOOGLE_CLIENT_SECRET,
   callbackURL: OAUTH_SECRET.GOOGLE_CALLBACK_URL_SELLER,
-  passReqToCallback: true as true,
 };
 
 const googleStrategySeller = new GoogleStrategy(
   googleConfig,
-  async (req: IAuthDTO, accessToken, refreshToken, profile, done) => {
+  async (accessToken, refreshToken, profile, done) => {
     try {
       const email = profile.emails![0].value;
       const name = profile.displayName;
@@ -22,7 +20,8 @@ const googleStrategySeller = new GoogleStrategy(
         email: email,
         username: name,
         googleId: googleId,
-        role: Role.SELLER,
+        state: UserState.SELLER,
+        role: Role.USER,
       };
 
       return done(null, user);

@@ -1,6 +1,7 @@
 import type { Request, Response, NextFunction } from 'express';
 
 import { JWT_CONFIG } from '../constants';
+import type { IAuthDTO } from '../dtos/AuthDto';
 import { AuthService } from '../services';
 
 export class AuthController {
@@ -10,7 +11,8 @@ export class AuthController {
     next: NextFunction,
   ): Promise<void> {
     try {
-      const response = await AuthService.loginWithGoogle(req);
+      const request = req as IAuthDTO;
+      const response = await AuthService.loginWithGoogle(request);
       const accessTokenDuration = JWT_CONFIG.JWT_EXPIRES_IN;
 
       console.log(accessTokenDuration);
@@ -24,7 +26,6 @@ export class AuthController {
 
       res.redirect('www.google.com');
     } catch (error) {
-      console.log(error);
       next(error);
     }
   }

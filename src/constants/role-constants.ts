@@ -1,5 +1,9 @@
 export enum Role {
-  BUYER = 1,
-  SELLER = 2,
-  ADMIN = 3,
+  USER = 1,
+  ADMIN = 2,
+}
+
+export enum UserState {
+  BUYER = 'buyer',
+  SELLER = 'seller',
 }

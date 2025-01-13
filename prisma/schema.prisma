@@ -18,7 +18,7 @@ model User {
   email          String?      @unique @map("email")
   username       String       @map("username")
   profilePicture String?      @map("profile_picture")
-  roleId         Int          @map("role_id")
+  roleId         Int          @default(1) @map("role_id")
   createdAt      DateTime     @default(now()) @map("created_at")
   updatedAt      DateTime     @updatedAt @map("updated_at")
   role           Role         @relation(fields: [roleId], references: [id])

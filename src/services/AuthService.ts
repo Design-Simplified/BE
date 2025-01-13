@@ -1,4 +1,4 @@
-import { db as databse } from '../configs/database';
+import { db as database } from '../configs/database';
 import { AuthProvider } from '../constants';
 import type { IAuthDTO, ITokenPayload } from '../dtos/AuthDto';
 import type { IRegisterResponse } from '../dtos/UserDto';
@@ -7,8 +7,6 @@ import { JwtToken } from '../utils/jwt-utils';
 
 export class AuthService {
   static async loginWithGoogle(request: IAuthDTO): Promise<IRegisterResponse> {
-    const roleId = request.user.role;
-
     let googleMethod = await AuthMethodRepository.findByProviderId(
       request.user.googleId,
     );
@@ -25,6 +23,7 @@ export class AuthService {
 
         const tokenPayload: ITokenPayload = {
           userId: user.id,
+          state: request.user.state,
         };
 
         const accessToken = JwtToken.generateAccessToken(tokenPayload);
@@ -34,13 +33,12 @@ export class AuthService {
         };
       }
 
-      const db = databse;
+      const db = database;
 
       try {
         const createUserTx = await db.$transaction(async tx => {
           const newUser = await UserRepository.create(
             request.user.username,
-            roleId,
             request.user.email,
             tx,
           );
@@ -57,6 +55,7 @@ export class AuthService {
 
         const tokenPayload: ITokenPayload = {
           userId: createUserTx.id,
+          state: request.user.state,
         };
 
         const accessToken = JwtToken.generateAccessToken(tokenPayload);
@@ -71,6 +70,7 @@ export class AuthService {
 
     const tokenPayload: ITokenPayload = {
       userId: googleMethod.userId,
+      state: request.user.state,
     };
 
     const accessToken = JwtToken.generateAccessToken(tokenPayload);

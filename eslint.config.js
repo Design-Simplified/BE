@@ -20,7 +20,7 @@ const compat = new FlatCompat({
 export default [
   {
     files: ['**/*.ts', '**/*.tsx'],
-    ignores: ['node_modules', 'dist', 'build', 'logs/**', 'tests/**'],
+    ignores: ['node_modules/**', 'dist/**', 'build/**', 'logs/**', 'tests/**'],
     languageOptions: {
       ecmaVersion: 2021,
       sourceType: 'module',
