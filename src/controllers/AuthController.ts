@@ -15,8 +15,6 @@ export class AuthController {
       const response = await AuthService.loginWithGoogle(request);
       const accessTokenDuration = JWT_CONFIG.JWT_EXPIRES_IN;
 
-      console.log(accessTokenDuration);
-
       res.cookie('accessToken', response.accessToken, {
         httpOnly: true,
         secure: true,
@@ -24,7 +22,7 @@ export class AuthController {
         maxAge: accessTokenDuration,
       });
 
-      res.redirect('www.google.com');
+      res.redirect('https://fe-design-simplified.vercel.app/');
     } catch (error) {
       next(error);
     }
