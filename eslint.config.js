@@ -19,8 +19,10 @@ const compat = new FlatCompat({
 
 export default [
   {
+    ignores: ['node_modules/', 'dist/', 'build/', 'logs/', 'tests/', 'jest.config.ts'],
+  },
+  {
     files: ['**/*.ts', '**/*.tsx'],
-    ignores: ['node_modules/**', 'dist/**', 'build/**', 'logs/**', 'tests/**'],
     languageOptions: {
       ecmaVersion: 2021,
       sourceType: 'module',
