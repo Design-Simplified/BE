@@ -7,76 +7,91 @@ import { JwtToken } from '../utils/jwt-utils';
 
 export class AuthService {
   static async loginWithGoogle(request: IAuthDTO): Promise<IRegisterResponse> {
-    let googleMethod = await AuthMethodRepository.findByProviderId(
+    return AuthService.loginWithProvider(
+      AuthProvider.GOOGLE,
       request.user.googleId,
+      request,
     );
+  }
 
-    if (!googleMethod) {
-      const user = await UserRepository.findByEmail(request.user.email);
+  static async loginWithFacebook(
+    request: IAuthDTO,
+  ): Promise<IRegisterResponse> {
+    return AuthService.loginWithProvider(
+      AuthProvider.FACEBOOK,
+      request.user.facebookId,
+      request,
+    );
+  }
 
-      if (user) {
-        googleMethod = await AuthMethodRepository.create(
-          user.id,
-          AuthProvider.GOOGLE,
-          request.user.googleId,
-        );
+  private static async loginWithProvider(
+    provider: AuthProvider,
+    providerId: string,
+    request: IAuthDTO,
+  ): Promise<IRegisterResponse> {
+    let authMethod = await AuthMethodRepository.findByProviderId(providerId);
 
-        const tokenPayload: ITokenPayload = {
-          userId: user.id,
-          state: request.user.state,
-        };
+    if (!authMethod) {
+      const userEmail = request.user.email;
 
-        const accessToken = JwtToken.generateAccessToken(tokenPayload);
+      if (userEmail) {
+        const existingUser = await UserRepository.findByEmail(userEmail);
 
-        return {
-          accessToken: accessToken,
-        };
+        if (existingUser) {
+          authMethod = await AuthMethodRepository.create(
+            existingUser.id,
+            provider,
+            providerId,
+          );
+
+          const tokenPayload: ITokenPayload = {
+            userId: existingUser.id,
+            state: request.user.state,
+          };
+          const accessToken = JwtToken.generateAccessToken(tokenPayload);
+
+          return { accessToken };
+        }
       }
 
       const db = database;
 
       try {
-        const createUserTx = await db.$transaction(async tx => {
-          const newUser = await UserRepository.create(
+        const newUser = await db.$transaction(async tx => {
+          const createdUser = await UserRepository.create(
             request.user.username,
-            request.user.email,
+            userEmail || '',
             tx,
           );
 
-          googleMethod = await AuthMethodRepository.create(
-            newUser.id,
-            AuthProvider.GOOGLE,
-            request.user.googleId,
+          await AuthMethodRepository.create(
+            createdUser.id,
+            provider,
+            providerId,
             tx,
           );
 
-          return newUser;
+          return createdUser;
         });
 
         const tokenPayload: ITokenPayload = {
-          userId: createUserTx.id,
+          userId: newUser.id,
           state: request.user.state,
         };
-
         const accessToken = JwtToken.generateAccessToken(tokenPayload);
 
-        return {
-          accessToken: accessToken,
-        };
+        return { accessToken };
       } catch (error) {
         throw error;
       }
     }
 
     const tokenPayload: ITokenPayload = {
-      userId: googleMethod.userId,
+      userId: authMethod.userId,
       state: request.user.state,
     };
-
     const accessToken = JwtToken.generateAccessToken(tokenPayload);
 
-    return {
-      accessToken: accessToken,
-    };
+    return { accessToken };
   }
 }
