@@ -1,12 +1,12 @@
 import { db as database } from '../configs/database';
 import { AuthProvider } from '../constants';
 import type { IAuthDTO, ITokenPayload } from '../dtos/AuthDto';
-import type { IRegisterResponse } from '../dtos/UserDto';
+import type { ILoginResponse } from '../dtos/UserDto';
 import { UserRepository, AuthMethodRepository } from '../repositories';
 import { JwtToken } from '../utils/jwt-utils';
 
 export class AuthService {
-  static async loginWithGoogle(request: IAuthDTO): Promise<IRegisterResponse> {
+  static async loginWithGoogle(request: IAuthDTO): Promise<ILoginResponse> {
     return AuthService.loginWithProvider(
       AuthProvider.GOOGLE,
       request.user.googleId,
@@ -14,9 +14,7 @@ export class AuthService {
     );
   }
 
-  static async loginWithFacebook(
-    request: IAuthDTO,
-  ): Promise<IRegisterResponse> {
+  static async loginWithFacebook(request: IAuthDTO): Promise<ILoginResponse> {
     return AuthService.loginWithProvider(
       AuthProvider.FACEBOOK,
       request.user.facebookId,
@@ -28,7 +26,7 @@ export class AuthService {
     provider: AuthProvider,
     providerId: string,
     request: IAuthDTO,
-  ): Promise<IRegisterResponse> {
+  ): Promise<ILoginResponse> {
     let authMethod = await AuthMethodRepository.findByProviderId(providerId);
 
     if (!authMethod) {

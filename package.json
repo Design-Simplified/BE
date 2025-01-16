@@ -4,7 +4,7 @@
   "main": "src/index.ts",
   "scripts": {
     "prepare": "husky",
-    "test": "jest --detectOpenHandles",
+    "test": "cross-env NODE_ENV=development jest --detectOpenHandles",
     "dev": "nodemon",
     "build": "pnpm exec tsc",
     "lint": "eslint --fix",

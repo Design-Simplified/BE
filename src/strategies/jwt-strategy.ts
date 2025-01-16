@@ -1,7 +1,8 @@
 import type { Request } from 'express';
 import { Strategy, ExtractJwt } from 'passport-jwt';
 
-import type { ITokenPayload } from '../dtos/AuthDto';
+import { currentEnv, Env } from '../constants';
+import { ResponseError } from '../error/ResponseError';
 import { UserRepository } from '../repositories';
 
 const cookieExtractor = (req: Request) => {
@@ -14,26 +15,39 @@ const cookieExtractor = (req: Request) => {
   return token;
 };
 
+let extractors = [];
+
+if (currentEnv == Env.PRODUCTION) {
+  extractors = [cookieExtractor];
+} else {
+  extractors = [cookieExtractor, ExtractJwt.fromAuthHeaderAsBearerToken()];
+}
+
 const opt = {
-  jwtFromRequest: ExtractJwt.fromExtractors([
-    cookieExtractor,
-    ExtractJwt.fromAuthHeaderAsBearerToken(),
-  ]),
+  jwtFromRequest: ExtractJwt.fromExtractors(extractors),
   secretOrKey: process.env.JWT_SECRET as string,
 };
 
 const jwtStrategy = new Strategy(opt, async (payload, done) => {
-  const userData = await UserRepository.findById(payload.userId);
+  try {
+    const userData = await UserRepository.findById(payload.userId);
 
-  const user = {
-    userId: userData?.id,
-  } as ITokenPayload;
+    if (!userData) {
+      throw new ResponseError(401, 'Unauthorized!');
+    }
 
-  if (user) {
+    const user = {
+      userId: userData.id,
+      username: userData.username,
+      email: userData?.email,
+      role: userData.roleId,
+      state: payload.state,
+    };
+
     return done(null, user);
+  } catch (error) {
+    return done(error, false);
   }
-
-  return done(null, false);
 });
 
 export { jwtStrategy };
