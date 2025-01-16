@@ -92,8 +92,6 @@ export class AuthController {
         maxAge: accessTokenDuration,
       });
 
-      console.log(OAUTH_SECRET.CLIENT_AUTH_REDIRECT_URL_LOCAL);
-
       res.redirect(OAUTH_SECRET.CLIENT_AUTH_REDIRECT_URL_LOCAL);
     } catch (error) {
       next(error);
