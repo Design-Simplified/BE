@@ -3,6 +3,7 @@ import type { Request, Response, NextFunction } from 'express';
 import { JWT_CONFIG, OAUTH_SECRET } from '../constants';
 import type { IAuthDTO } from '../dtos/AuthDto';
 import { AuthService } from '../services';
+import { successResponse } from '../utils/api-response';
 
 export class AuthController {
   static async loginWithGoogle(
@@ -94,6 +95,19 @@ export class AuthController {
       console.log(OAUTH_SECRET.CLIENT_AUTH_REDIRECT_URL_LOCAL);
 
       res.redirect(OAUTH_SECRET.CLIENT_AUTH_REDIRECT_URL_LOCAL);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async logout(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      res.clearCookie('accessToken');
+      successResponse(res, 200, 'Logout success');
     } catch (error) {
       next(error);
     }

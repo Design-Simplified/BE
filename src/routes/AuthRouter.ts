@@ -3,6 +3,7 @@ import { Router } from 'express';
 import { AuthController } from '../controllers';
 import { FacebookAuthMiddleware } from '../middlewares/FacebookAuthMiddleware';
 import { GoogleAuthMiddleware } from '../middlewares/GoogleAuthMiddleware';
+import { mainAuthMiddleware } from '../middlewares/MainAuthMiddleware';
 
 export const authRoute: Router = Router();
 
@@ -60,3 +61,4 @@ authRoute.get(
   FacebookAuthMiddleware.callbackSellerLocal,
   AuthController.loginWithFacebookLocal,
 );
+authRoute.post('/logout', mainAuthMiddleware, AuthController.logout);
