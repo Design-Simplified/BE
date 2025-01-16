@@ -106,7 +106,11 @@ export class AuthController {
     next: NextFunction,
   ): Promise<void> {
     try {
-      res.clearCookie('accessToken');
+      res.clearCookie('accessToken', {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none',
+      });
       successResponse(res, 200, 'Logout success');
     } catch (error) {
       next(error);
