@@ -1,4 +1,5 @@
 import type { Prisma } from '@prisma/client';
+import { v4 as uuid } from 'uuid';
 
 import { db } from '../configs/database';
 
@@ -8,8 +9,11 @@ export class UserRepository {
     email?: string,
     tx: Prisma.TransactionClient = db,
   ) {
+    const id = `USR-${uuid()}`;
+
     return tx.user.create({
       data: {
+        id: id,
         email: email,
         username: username,
       },
