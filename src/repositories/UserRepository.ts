@@ -6,8 +6,6 @@ import { db } from '../configs/database';
 export class UserRepository {
   static async create(
     username: string,
-    membershipId: string,
-    couponWalletId: string,
     email?: string,
     tx: Prisma.TransactionClient = db,
   ) {
@@ -18,8 +16,6 @@ export class UserRepository {
         id: id,
         email: email,
         username: username,
-        membershipId: membershipId,
-        couponWalletId: couponWalletId,
       },
     });
   }

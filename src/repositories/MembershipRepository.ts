@@ -4,12 +4,13 @@ import { v4 as uuid } from 'uuid';
 import { db } from '../configs/database';
 
 export class MembershipRepository {
-  static async create(tx: Prisma.TransactionClient = db) {
+  static async create(userId: string, tx: Prisma.TransactionClient = db) {
     const id = `MBS-${uuid()}`;
 
     return tx.membership.create({
       data: {
         id: id,
+        userId: userId,
       },
     });
   }

@@ -4,12 +4,13 @@ import { v4 as uuid } from 'uuid';
 import { db } from '../configs/database';
 
 export class CouponWalletRepository {
-  static async create(tx: Prisma.TransactionClient = db) {
+  static async create(userId: string, tx: Prisma.TransactionClient = db) {
     const id = `CW-${uuid()}`;
 
     return tx.couponWallet.create({
       data: {
         id: id,
+        userId: userId,
       },
     });
   }

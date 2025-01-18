@@ -14,18 +14,16 @@ datasource db {
 }
 
 model User {
-  id             String       @id @map("id")
-  email          String?      @unique @map("email")
-  username       String       @map("username")
-  profilePicture String?      @map("profile_picture")
-  roleId         Int          @default(1) @map("role_id")
-  membershipId   String       @unique @map("membership_id")
-  couponWalletId String       @unique @map("coupon_wallet_id")
-  createdAt      DateTime     @default(now()) @map("created_at")
-  updatedAt      DateTime     @updatedAt @map("updated_at")
-  role           Role         @relation(fields: [roleId], references: [id])
-  membership     Membership   @relation(fields: [membershipId], references: [id], onDelete: Cascade)
-  couponWallet   CouponWallet @relation(fields: [couponWalletId], references: [id], onDelete: Cascade)
+  id             String        @id @map("id")
+  email          String?       @unique @map("email")
+  username       String        @map("username")
+  profilePicture String?       @map("profile_picture")
+  roleId         Int           @default(1) @map("role_id")
+  createdAt      DateTime      @default(now()) @map("created_at")
+  updatedAt      DateTime      @updatedAt @map("updated_at")
+  role           Role          @relation(fields: [roleId], references: [id])
+  membership     Membership?   @relation
+  couponWallet   CouponWallet? @relation
   authMethod     AuthMethod[]
 
   @@map("users")
@@ -33,12 +31,27 @@ model User {
 
 model CouponWallet {
   id        String   @id @map("id")
+  userId    String   @unique @map("user_id")
   balance   Int      @default(0) @map("balance")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
-  user      User?    @relation
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("coupon_wallets")
+}
+
+model Membership {
+  id               String          @id @map("id")
+  userId           String          @unique @map("user_id")
+  startDate        DateTime?       @map("start_date")
+  endDate          DateTime?       @map("end_date")
+  membershipTypeId Int?            @map("membership_type_id")
+  createdAt        DateTime        @default(now()) @map("created_at")
+  updatedAt        DateTime        @updatedAt @map("updated_at")
+  membershipType   MembershipType? @relation(fields: [membershipTypeId], references: [id])
+  user             User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("memberships")
 }
 
 model AuthMethod {
@@ -48,7 +61,7 @@ model AuthMethod {
   providerId String   @unique @map("provider_id")
   createdAt  DateTime @default(now()) @map("created_at")
   updatedAt  DateTime @updatedAt @map("updated_at")
-  user       User     @relation(fields: [userId], references: [id])
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, provider])
   @@map("auth_methods")
@@ -62,19 +75,6 @@ model Role {
   users     User[]   @relation
 
   @@map("roles")
-}
-
-model Membership {
-  id               String          @id @map("id")
-  startDate        DateTime?       @map("start_date")
-  endDate          DateTime?       @map("end_date")
-  membershipTypeId Int?            @map("membership_type_id")
-  createdAt        DateTime        @default(now()) @map("created_at")
-  updatedAt        DateTime        @updatedAt @map("updated_at")
-  membershipType   MembershipType? @relation(fields: [membershipTypeId], references: [id])
-  user             User?           @relation
-
-  @@map("memberships")
 }
 
 model MembershipType {

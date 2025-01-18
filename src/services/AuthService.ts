@@ -61,17 +61,15 @@ export class AuthService {
 
       try {
         const newUser = await db.$transaction(async tx => {
-          const createdMembership = await MembershipRepository.create(tx);
-
-          const createdCoupinWallet = await CouponWalletRepository.create(tx);
-
           const createdUser = await UserRepository.create(
             request.user.username,
-            createdMembership.id,
-            createdCoupinWallet.id,
             userEmail || '',
             tx,
           );
+
+          await MembershipRepository.create(createdUser.id, tx);
+
+          await CouponWalletRepository.create(createdUser.id, tx);
 
           await AuthMethodRepository.create(
             createdUser.id,
