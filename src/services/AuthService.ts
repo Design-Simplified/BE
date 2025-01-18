@@ -6,6 +6,7 @@ import {
   UserRepository,
   AuthMethodRepository,
   MembershipRepository,
+  CouponWalletRepository,
 } from '../repositories';
 import { JwtToken } from '../utils/jwt-utils';
 
@@ -62,9 +63,12 @@ export class AuthService {
         const newUser = await db.$transaction(async tx => {
           const createdMembership = await MembershipRepository.create(tx);
 
+          const createdCoupinWallet = await CouponWalletRepository.create(tx);
+
           const createdUser = await UserRepository.create(
             request.user.username,
             createdMembership.id,
+            createdCoupinWallet.id,
             userEmail || '',
             tx,
           );

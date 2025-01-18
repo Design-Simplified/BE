@@ -20,13 +20,25 @@ model User {
   profilePicture String?      @map("profile_picture")
   roleId         Int          @default(1) @map("role_id")
   membershipId   String       @unique @map("membership_id")
+  couponWalletId String       @unique @map("coupon_wallet_id")
   createdAt      DateTime     @default(now()) @map("created_at")
   updatedAt      DateTime     @updatedAt @map("updated_at")
   role           Role         @relation(fields: [roleId], references: [id])
   membership     Membership   @relation(fields: [membershipId], references: [id], onDelete: Cascade)
+  couponWallet   CouponWallet @relation(fields: [couponWalletId], references: [id], onDelete: Cascade)
   authMethod     AuthMethod[]
 
   @@map("users")
+}
+
+model CouponWallet {
+  id        String   @id @map("id")
+  balance   Int      @default(0) @map("balance")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  user      User?    @relation
+
+  @@map("coupon_wallets")
 }
 
 model AuthMethod {
