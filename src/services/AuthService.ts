@@ -2,7 +2,11 @@ import { db as database } from '../configs/database';
 import { AuthProvider } from '../constants';
 import type { IAuthDTO, ITokenPayload } from '../dtos/AuthDto';
 import type { ILoginResponse } from '../dtos/UserDto';
-import { UserRepository, AuthMethodRepository } from '../repositories';
+import {
+  UserRepository,
+  AuthMethodRepository,
+  MembershipRepository,
+} from '../repositories';
 import { JwtToken } from '../utils/jwt-utils';
 
 export class AuthService {
@@ -56,8 +60,11 @@ export class AuthService {
 
       try {
         const newUser = await db.$transaction(async tx => {
+          const createdMembership = await MembershipRepository.create(tx);
+
           const createdUser = await UserRepository.create(
             request.user.username,
+            createdMembership.id,
             userEmail || '',
             tx,
           );

@@ -5,7 +5,7 @@
   "scripts": {
     "prepare": "husky",
     "test": "cross-env NODE_ENV=development jest --detectOpenHandles",
-    "dev": "nodemon",
+    "dev": "cross-env NODE_ENV=development nodemon",
     "build": "pnpm exec tsc",
     "lint": "eslint --fix",
     "format": "prettier --write 'src/**/*.ts'",

@@ -19,12 +19,13 @@ model User {
   username       String       @map("username")
   profilePicture String?      @map("profile_picture")
   roleId         Int          @default(1) @map("role_id")
+  membershipId   String       @unique @map("membership_id")
   createdAt      DateTime     @default(now()) @map("created_at")
   updatedAt      DateTime     @updatedAt @map("updated_at")
   role           Role         @relation(fields: [roleId], references: [id])
+  membership     Membership   @relation(fields: [membershipId], references: [id], onDelete: Cascade)
   authMethod     AuthMethod[]
 
-  @@index(email)
   @@map("users")
 }
 
@@ -49,4 +50,27 @@ model Role {
   users     User[]   @relation
 
   @@map("roles")
+}
+
+model Membership {
+  id               String          @id @map("id")
+  startDate        DateTime?       @map("start_date")
+  endDate          DateTime?       @map("end_date")
+  membershipTypeId Int?            @map("membership_type_id")
+  createdAt        DateTime        @default(now()) @map("created_at")
+  updatedAt        DateTime        @updatedAt @map("updated_at")
+  membershipType   MembershipType? @relation(fields: [membershipTypeId], references: [id])
+  user             User?           @relation
+
+  @@map("memberships")
+}
+
+model MembershipType {
+  id          Int          @id @default(autoincrement()) @map("id")
+  name        String       @map("name")
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+  memberships Membership[] @relation
+
+  @@map("membership_types")
 }
