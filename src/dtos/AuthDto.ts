@@ -5,6 +5,11 @@ export interface ITokenPayload {
   state: string;
 }
 
+export interface ITokenEmailPayload {
+  email: string;
+  state: string;
+}
+
 export interface IAuthDTO extends Request {
   user?: {
     userId: string;
@@ -16,4 +21,8 @@ export interface IAuthDTO extends Request {
     facebookId?: string;
     appleId?: string;
   };
+}
+
+export interface IVerifyEmailDTO {
+  emailToken: string;
 }

@@ -1,7 +1,9 @@
 import { db as database } from '../configs/database';
-import { AuthProvider } from '../constants';
-import type { IAuthDTO, ITokenPayload } from '../dtos/AuthDto';
-import type { ILoginResponse } from '../dtos/UserDto';
+import { AuthProvider, UserState } from '../constants';
+import type { IAuthDTO, ITokenPayload, IVerifyEmailDTO } from '../dtos/AuthDto';
+import { type ILoginWithEmail, type ILoginResponse } from '../dtos/UserDto';
+import { ResponseError } from '../error/ResponseError';
+import { QueueSender } from '../queue';
 import {
   UserRepository,
   AuthMethodRepository,
@@ -9,6 +11,8 @@ import {
   CouponWalletRepository,
 } from '../repositories';
 import { JwtToken } from '../utils/jwt-utils';
+import { Validator } from '../utils/validator';
+import { UserValidation } from '../validations';
 
 export class AuthService {
   static async loginWithGoogle(request: IAuthDTO): Promise<ILoginResponse> {
@@ -60,7 +64,7 @@ export class AuthService {
       const db = database;
 
       try {
-        const newUser = await db.$transaction(async tx => {
+        const newUser = await db.$transaction(async (tx: any) => {
           const createdUser = await UserRepository.create(
             request.user.username,
             userEmail || '',
@@ -97,6 +101,80 @@ export class AuthService {
       userId: authMethod.userId,
       state: request.user.state,
     };
+    const accessToken = JwtToken.generateAccessToken(tokenPayload);
+
+    return { accessToken };
+  }
+
+  static async loginWithEmail(request: ILoginWithEmail): Promise<void> {
+    const validData = Validator.validate(
+      UserValidation.LOGIN_WITH_EMAIL,
+      request,
+    );
+
+    const payload = {
+      email: validData.email,
+      state: validData.state,
+    };
+
+    const emailToken = JwtToken.generateEmailToken(payload);
+
+    if (
+      validData.state === UserState.BUYER ||
+      validData.state === UserState.SELLER
+    ) {
+      QueueSender.sendEmail(
+        validData.email,
+        'Login Verification',
+        'Login Verification',
+        `<a href="${process.env.LOGIN_WITH_EMAIL_CALLBACK as string}/${emailToken}">Click here to login</a>`,
+      );
+    } else {
+      throw new ResponseError(400, 'Invalid state');
+    }
+  }
+
+  static async loginWithEmailCallback(
+    request: IVerifyEmailDTO,
+  ): Promise<ILoginResponse> {
+    const payload = JwtToken.verifyEmailToken(request.emailToken);
+
+    const email = payload.email;
+    const state = payload.state;
+
+    if (!email || !state) {
+      throw new ResponseError(401, 'Unauthorized!');
+    }
+
+    let user = await UserRepository.findByEmail(email);
+
+    if (!user) {
+      const db = database;
+
+      try {
+        user = await db.$transaction(async (tx: any) => {
+          const createdUser = await UserRepository.create(
+            email.split('@')[0],
+            email,
+            tx,
+          );
+
+          await MembershipRepository.create(createdUser.id, tx);
+
+          await CouponWalletRepository.create(createdUser.id, tx);
+
+          return createdUser;
+        });
+      } catch (error) {
+        throw error;
+      }
+    }
+
+    const tokenPayload: ITokenPayload = {
+      userId: user.id,
+      state,
+    };
+
     const accessToken = JwtToken.generateAccessToken(tokenPayload);
 
     return { accessToken };

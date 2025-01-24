@@ -1,7 +1,8 @@
 import type { Request, Response, NextFunction } from 'express';
 
 import { JWT_CONFIG, OAUTH_SECRET } from '../constants';
-import type { IAuthDTO } from '../dtos/AuthDto';
+import type { IAuthDTO, IVerifyEmailDTO } from '../dtos/AuthDto';
+import type { ILoginWithEmail } from '../dtos/UserDto';
 import { AuthService } from '../services';
 import { successResponse } from '../utils/api-response';
 
@@ -83,6 +84,71 @@ export class AuthController {
     try {
       const request = req as IAuthDTO;
       const response = await AuthService.loginWithFacebook(request);
+      const accessTokenDuration = JWT_CONFIG.JWT_EXPIRES_IN;
+
+      res.cookie('accessToken', response.accessToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none',
+        maxAge: accessTokenDuration,
+      });
+
+      res.redirect(OAUTH_SECRET.CLIENT_AUTH_REDIRECT_URL_LOCAL);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async loginWithEmail(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const request = req.body as ILoginWithEmail;
+      await AuthService.loginWithEmail(request);
+
+      successResponse(res, 200, 'Verification email sent successfully');
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async loginWithEmailCallback(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const request = {
+        emailToken: req.params.emailToken,
+      } as IVerifyEmailDTO;
+      const response = await AuthService.loginWithEmailCallback(request);
+      const accessTokenDuration = JWT_CONFIG.JWT_EXPIRES_IN;
+
+      res.cookie('accessToken', response.accessToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'none',
+        maxAge: accessTokenDuration,
+      });
+
+      res.redirect(OAUTH_SECRET.CLIENT_AUTH_REDIRECT_URL);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async loginWithEmailCallbackLocal(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const request = {
+        emailToken: req.params.emailToken,
+      } as IVerifyEmailDTO;
+      const response = await AuthService.loginWithEmailCallback(request);
       const accessTokenDuration = JWT_CONFIG.JWT_EXPIRES_IN;
 
       res.cookie('accessToken', response.accessToken, {

@@ -58,7 +58,7 @@ model AuthMethod {
   id         Int      @id @default(autoincrement()) @map("id")
   userId     String   @map("user_id")
   provider   String   @map("provider")
-  providerId String   @unique @map("provider_id")
+  providerId String?   @unique @map("provider_id")
   createdAt  DateTime @default(now()) @map("created_at")
   updatedAt  DateTime @updatedAt @map("updated_at")
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -85,4 +85,25 @@ model MembershipType {
   memberships Membership[] @relation
 
   @@map("membership_types")
+}
+
+model Niches {
+  id        Int         @id @default(autoincrement()) @map("id")
+  name      String      @map("name")
+  createdAt DateTime    @default(now()) @map("created_at")
+  updatedAt DateTime    @updatedAt @map("updated_at")
+  SubNiches SubNiches[]
+
+  @@map("niches")
+}
+
+model SubNiches {
+  id        Int      @id @default(autoincrement()) @map("id")
+  name      String   @map("name")
+  nicheId   Int      @map("niche_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  niche     Niches   @relation(fields: [nicheId], references: [id])
+
+  @@map("sub_niches")
 }

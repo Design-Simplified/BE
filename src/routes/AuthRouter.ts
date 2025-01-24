@@ -61,4 +61,14 @@ authRoute.get(
   FacebookAuthMiddleware.callbackSellerLocal,
   AuthController.loginWithFacebookLocal,
 );
+
+authRoute.get('/email', AuthController.loginWithEmail);
+authRoute.get(
+  '/email/callback/:emailToken',
+  AuthController.loginWithEmailCallback,
+);
+authRoute.get(
+  '/local/email/callback/:emailToken',
+  AuthController.loginWithEmailCallbackLocal,
+);
 authRoute.post('/logout', mainAuthMiddleware, AuthController.logout);
