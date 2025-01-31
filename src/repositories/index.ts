@@ -3,3 +3,7 @@ export * from './UserRepository';
 export * from './AuthRepository';
 export * from './MembershipRepository';
 export * from './CouponWalletRepository';
+export * from './TransactionRepository';
+export * from './TransactionItemRepository';
+export * from './CouponPackageRepository';
+export * from './MembershipTypeRepository';

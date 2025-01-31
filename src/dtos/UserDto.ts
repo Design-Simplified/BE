@@ -1,4 +1,4 @@
-export interface ILoginWithEmail {
+export interface ILoginWithEmailRequest {
   email: string;
   state: string;
 }

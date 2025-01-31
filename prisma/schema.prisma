@@ -13,6 +13,13 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum TransactionStatus {
+  pending
+  paid
+  failedq
+  cancelled
+}
+
 model User {
   id             String        @id @map("id")
   email          String?       @unique @map("email")
@@ -25,6 +32,7 @@ model User {
   membership     Membership?   @relation
   couponWallet   CouponWallet? @relation
   authMethod     AuthMethod[]
+  Transaction    Transaction[]
 
   @@map("users")
 }
@@ -58,7 +66,7 @@ model AuthMethod {
   id         Int      @id @default(autoincrement()) @map("id")
   userId     String   @map("user_id")
   provider   String   @map("provider")
-  providerId String?   @unique @map("provider_id")
+  providerId String?  @unique @map("provider_id")
   createdAt  DateTime @default(now()) @map("created_at")
   updatedAt  DateTime @updatedAt @map("updated_at")
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -78,32 +86,81 @@ model Role {
 }
 
 model MembershipType {
-  id          Int          @id @default(autoincrement()) @map("id")
-  name        String       @map("name")
-  createdAt   DateTime     @default(now()) @map("created_at")
-  updatedAt   DateTime     @updatedAt @map("updated_at")
-  memberships Membership[] @relation
+  id              Int               @id @default(autoincrement()) @map("id")
+  name            String            @map("name")
+  price           Int               @map("price")
+  createdAt       DateTime          @default(now()) @map("created_at")
+  updatedAt       DateTime          @updatedAt @map("updated_at")
+  memberships     Membership[]      @relation
+  TransactionItem TransactionItem[]
 
   @@map("membership_types")
 }
 
-model Niches {
-  id        Int         @id @default(autoincrement()) @map("id")
-  name      String      @map("name")
-  createdAt DateTime    @default(now()) @map("created_at")
-  updatedAt DateTime    @updatedAt @map("updated_at")
-  SubNiches SubNiches[]
+model Niche {
+  id        Int        @id @default(autoincrement()) @map("id")
+  name      String     @map("name")
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+  SubNiches SubNiche[]
 
   @@map("niches")
 }
 
-model SubNiches {
+model SubNiche {
   id        Int      @id @default(autoincrement()) @map("id")
   name      String   @map("name")
   nicheId   Int      @map("niche_id")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
-  niche     Niches   @relation(fields: [nicheId], references: [id])
+  niche     Niche    @relation(fields: [nicheId], references: [id])
 
   @@map("sub_niches")
+}
+
+model CouponPackage {
+  id              Int               @id @default(autoincrement()) @map("id")
+  name            String            @map("name")
+  price           Int               @map("price")
+  total_coupons   Int               @map("total_coupons")
+  createdAt       DateTime          @default(now()) @map("created_at")
+  updatedAt       DateTime          @updatedAt @map("updated_at")
+  TransactionItem TransactionItem[]
+
+  @@map("coupon_packages")
+}
+
+model Transaction {
+  id               String            @id @map("id")
+  userId           String            @map("user_id")
+  userName         String            @map("user_name")
+  userEmail        String?           @map("user_email")
+  totalAmount      Int               @map("total_amount")
+  snapToken        String?           @map("snap_token")
+  snapUrl          String?           @map("snap_url")
+  status           TransactionStatus @map("status")
+  paymentMethod    String?           @map("payment_method")
+  createdAt        DateTime          @default(now()) @map("created_at")
+  updatedAt        DateTime          @updatedAt @map("updated_at")
+  transactionItems TransactionItem[]
+  user             User              @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([userName])
+  @@map("transactions")
+}
+
+model TransactionItem {
+  id               String          @id @map("id")
+  transactionId    String          @map("transaction_id")
+  amount           Int             @map("amount")
+  couponPackageId  Int?            @map("coupon_package_id")
+  membershipTypeId Int?            @map("membership_type_id")
+  createdAt        DateTime        @default(now()) @map("created_at")
+  updatedAt        DateTime        @updatedAt @map("updated_at")
+  transaction      Transaction     @relation(fields: [transactionId], references: [id])
+  couponPackage    CouponPackage?  @relation(fields: [couponPackageId], references: [id])
+  membershipType   MembershipType? @relation(fields: [membershipTypeId], references: [id])
+
+  @@map("transaction_items")
 }

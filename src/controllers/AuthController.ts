@@ -2,7 +2,7 @@ import type { Request, Response, NextFunction } from 'express';
 
 import { JWT_CONFIG, OAUTH_SECRET } from '../constants';
 import type { IAuthDTO, IVerifyEmailDTO } from '../dtos/AuthDto';
-import type { ILoginWithEmail } from '../dtos/UserDto';
+import type { ILoginWithEmailRequest } from '../dtos/UserDto';
 import { AuthService } from '../services';
 import { successResponse } from '../utils/api-response';
 
@@ -105,7 +105,7 @@ export class AuthController {
     next: NextFunction,
   ): Promise<void> {
     try {
-      const request = req.body as ILoginWithEmail;
+      const request = req.body as ILoginWithEmailRequest;
       await AuthService.loginWithEmail(request);
 
       successResponse(res, 200, 'Verification email sent successfully');

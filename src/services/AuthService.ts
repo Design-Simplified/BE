@@ -1,7 +1,7 @@
 import { db as database } from '../configs/database';
 import { AuthProvider, UserState } from '../constants';
 import type { IAuthDTO, ITokenPayload, IVerifyEmailDTO } from '../dtos/AuthDto';
-import { type ILoginWithEmail, type ILoginResponse } from '../dtos/UserDto';
+import type { ILoginWithEmailRequest, ILoginResponse } from '../dtos/UserDto';
 import { ResponseError } from '../error/ResponseError';
 import { QueueSender } from '../queue';
 import {
@@ -106,7 +106,7 @@ export class AuthService {
     return { accessToken };
   }
 
-  static async loginWithEmail(request: ILoginWithEmail): Promise<void> {
+  static async loginWithEmail(request: ILoginWithEmailRequest): Promise<void> {
     const validData = Validator.validate(
       UserValidation.LOGIN_WITH_EMAIL,
       request,

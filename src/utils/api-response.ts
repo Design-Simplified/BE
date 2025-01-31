@@ -36,6 +36,7 @@ export const errorResponse = (res: Response, error: Error): void => {
       errorMessage: error.errors[0].message,
     });
   } else {
+    console.log(error);
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       errorCode: StatusCodes.INTERNAL_SERVER_ERROR,
       errorMessage: 'Internal Server Error',

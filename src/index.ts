@@ -9,7 +9,7 @@ import { appLogger } from './configs/logger';
 import { currentEnv, Env } from './constants';
 import { ClientUrl } from './constants/client-url-constants';
 import { errorMiddleware } from './middlewares/error-middleware';
-import { healthRoute, authRoute, userRoute } from './routes';
+import { healthRoute, authRoute, userRoute, transactionRoute } from './routes';
 
 const app: Express = express();
 
@@ -40,6 +40,7 @@ app.use(requestip.mw());
 app.use('/api/', healthRoute);
 app.use('/api/auth/', authRoute);
 app.use('/api/users/', userRoute);
+app.use('/api/transactions/', transactionRoute);
 app.use(errorMiddleware);
 
 const port = Number(process.env.PORT_SERVER) || 5000;

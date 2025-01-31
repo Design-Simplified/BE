@@ -15,6 +15,14 @@ export class MembershipRepository {
     });
   }
 
+  static async findByUserId(userId: string, tx: Prisma.TransactionClient = db) {
+    return tx.membership.findFirst({
+      where: {
+        userId: userId,
+      },
+    });
+  }
+
   static async update(
     id: string,
     data: Prisma.MembershipUpdateInput,
