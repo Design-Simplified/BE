@@ -6,7 +6,7 @@ import { TransactionService } from '../services';
 import { successResponse } from '../utils/api-response';
 
 export class TransactionController {
-  static async createTransaction(
+  static async createTransactionLocal(
     req: Request,
     res: Response,
     next: NextFunction,
@@ -22,7 +22,7 @@ export class TransactionController {
         ...req.body,
       } as ICreateTransactionRequest;
 
-      const response = await TransactionService.createTransaction(request);
+      const response = await TransactionService.createTransactionLocal(request);
 
       successResponse(res, 201, 'Transaction created successfully', response);
     } catch (error) {

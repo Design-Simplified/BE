@@ -1,11 +1,11 @@
 import type { Prisma } from '@prisma/client';
-import { v4 as uuid } from 'uuid';
 
 import { db } from '../configs/database';
 import { PaymentStatus } from '../constants/payment-constants';
 
 export class TransactionRepository {
   static async create(
+    id: string,
     userId: string,
     userName: string,
     userEmail: string,
@@ -14,8 +14,6 @@ export class TransactionRepository {
     snapToken: string = null,
     snapUrl: string = null,
   ) {
-    const id = `TX-${uuid()}`;
-
     return tx.transaction.create({
       data: {
         id: id,

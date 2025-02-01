@@ -7,7 +7,7 @@ import requestip from 'request-ip';
 
 import { appLogger } from './configs/logger';
 import { currentEnv, Env } from './constants';
-import { ClientUrl } from './constants/client-url-constants';
+import { clientUrl } from './constants/client-url-constants';
 import { errorMiddleware } from './middlewares/error-middleware';
 import { healthRoute, authRoute, userRoute, transactionRoute } from './routes';
 
@@ -19,9 +19,9 @@ app.use(express.urlencoded({ extended: true }));
 let origin = [];
 
 if (currentEnv === Env.DEVELOPMENT) {
-  origin = [ClientUrl.Development, ClientUrl.Local];
+  origin = [clientUrl.DEVELOPMENT, clientUrl.LOCAL];
 } else if (currentEnv === Env.PRODUCTION) {
-  origin = [ClientUrl.Production];
+  origin = [clientUrl.PRODUCTION];
 } else {
   appLogger.error('Invalid environment');
   process.exit(1);

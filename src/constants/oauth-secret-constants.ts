@@ -1,9 +1,9 @@
 export const OAUTH_SECRET = {
   get CLIENT_AUTH_REDIRECT_URL_LOCAL() {
-    return process.env.CLIENT_AUTH_REDIRECT_URL_LOCAL as string;
+    return process.env.CLIENT_URL_LOCAL as string;
   },
   get CLIENT_AUTH_REDIRECT_URL() {
-    return process.env.CLIENT_AUTH_REDIRECT_URL as string;
+    return process.env.CLIENT_URL as string;
   },
   get GOOGLE_CLIENT_ID() {
     return process.env.GOOGLE_CLIENT_ID as string;

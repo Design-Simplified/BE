@@ -1,3 +1,5 @@
+import { v4 as uuid } from 'uuid';
+
 import { db as database } from '../configs/database';
 import { UserState } from '../constants';
 import type {
@@ -13,11 +15,12 @@ import {
   CouponPackageRepository,
   MembershipTypeRepository,
 } from '../repositories';
+import { PaymentUtils } from '../utils/payment-utils';
 import { Validator } from '../utils/validator';
 import { TransactionValidation } from '../validations';
 
 export class TransactionService {
-  static async createTransaction(
+  static async createTransactionLocal(
     request: ICreateTransactionRequest,
   ): Promise<ICreateTransactionResponse> {
     const validData = Validator.validate(TransactionValidation.CREATE, request);
@@ -50,6 +53,7 @@ export class TransactionService {
       transactionsItems.push({
         amount: couponPackage.price,
         couponPackageId: couponPackage.id,
+        name: couponPackage.name,
       });
     } else if (validData.membershipTypeId) {
       const userMembership = await MembershipRepository.findByUserId(user.id);
@@ -73,6 +77,7 @@ export class TransactionService {
       transactionsItems.push({
         amount: membershipType.price,
         membershipTypeId: membershipType.id,
+        name: membershipType.name,
       });
     } else {
       throw new ResponseError(400, 'Invalid Transaction Request');
@@ -85,20 +90,36 @@ export class TransactionService {
       0,
     );
 
+    const transactionId = `TX-${uuid()}`;
+
     const grossAmount = totalAmount * exchangeRate;
 
-    console.log('grossAmount', grossAmount);
+    const customerDetails = {
+      name: user.username,
+      email: user.email,
+    };
+
+    const payment = await PaymentUtils.sendToPaymentGatewayLocal(
+      transactionId,
+      grossAmount,
+      transactionsItems,
+      customerDetails,
+      exchangeRate,
+    );
 
     const db = database;
 
     try {
       const newTransaction = await db.$transaction(async (tx: any) => {
         const createdTransaction = await TransactionRepository.create(
+          transactionId,
           user.id,
           user.username,
           user.email,
           totalAmount,
           tx,
+          payment.token,
+          payment.redirect_url,
         );
 
         await TransactionItemRepository.createMany(

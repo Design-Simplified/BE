@@ -6,7 +6,7 @@ import { mainAuthMiddleware } from '../middlewares/MainAuthMiddleware';
 export const transactionRoute: Router = Router();
 
 transactionRoute.post(
-  '/',
+  '/local',
   mainAuthMiddleware,
-  TransactionController.createTransaction,
+  TransactionController.createTransactionLocal,
 );
