@@ -5,6 +5,7 @@ import { UserState } from '../constants';
 import type {
   ICreateTransactionRequest,
   ICreateTransactionResponse,
+  ITransactionNotifRequest,
 } from '../dtos/TransactionDto';
 import { ResponseError } from '../error/ResponseError';
 import {
@@ -252,5 +253,19 @@ export class TransactionService {
     } catch (error) {
       throw error;
     }
+  }
+
+  static async transactionNotif(
+    request: ITransactionNotifRequest,
+  ): Promise<void> {
+    const validData = Validator.validate(TransactionValidation.NOTIF, request);
+
+    TransactionRepository.findById(validData.transactionId).then(
+      transaction => {
+        if (transaction) {
+          console.log(validData);
+        }
+      },
+    );
   }
 }

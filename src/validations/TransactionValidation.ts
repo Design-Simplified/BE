@@ -10,4 +10,13 @@ export class TransactionValidation {
     couponPackageId: z.number().optional().nullish(),
     membershipTypeId: z.number().optional().nullish(),
   });
+
+  static readonly NOTIF: ZodType = z.object({
+    transactionId: z.string(),
+    transactionStatus: z.string(),
+    fraudStatus: z.string(),
+    statusCode: z.string(),
+    grossAmount: z.string(),
+    paymentType: z.string(),
+  });
 }

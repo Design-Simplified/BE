@@ -15,3 +15,4 @@ transactionRoute.post(
   mainAuthMiddleware,
   TransactionController.createTransaction,
 );
+transactionRoute.post('/notification', TransactionController.transactionNotif);

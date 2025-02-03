@@ -1,7 +1,10 @@
 import type { Request, Response, NextFunction } from 'express';
 
 import type { IAuthDTO } from '../dtos/AuthDto';
-import type { ICreateTransactionRequest } from '../dtos/TransactionDto';
+import type {
+  ICreateTransactionRequest,
+  ITransactionNotifRequest,
+} from '../dtos/TransactionDto';
 import { TransactionService } from '../services';
 import { successResponse } from '../utils/api-response';
 
@@ -49,6 +52,33 @@ export class TransactionController {
       const response = await TransactionService.createTransaction(request);
 
       successResponse(res, 201, 'Transaction created successfully', response);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async transactionNotif(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const request = {
+        transactionId: req.body.order_id,
+        transactionStatus: req.body.transaction_status,
+        fraudStatus: req.body.fraud_status,
+        statusCode: req.body.status_code,
+        grossAmount: req.body.gross_amount,
+        paymentType: req.body.payment_type,
+      } as ITransactionNotifRequest;
+
+      await TransactionService.transactionNotif(request);
+
+      successResponse(
+        res,
+        200,
+        'Transaction notification received successfully',
+      );
     } catch (error) {
       next(error);
     }
