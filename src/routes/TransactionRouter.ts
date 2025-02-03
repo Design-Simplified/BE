@@ -10,3 +10,8 @@ transactionRoute.post(
   mainAuthMiddleware,
   TransactionController.createTransactionLocal,
 );
+transactionRoute.post(
+  '/',
+  mainAuthMiddleware,
+  TransactionController.createTransaction,
+);
