@@ -64,7 +64,7 @@ export class TransactionUtils {
       }
 
       await CouponWalletRepository.update(
-        transaction.userId,
+        userWallet.id,
         {
           balance: userWallet.balance + couponPackage.total_coupons,
         },
