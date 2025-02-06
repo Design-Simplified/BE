@@ -13,6 +13,7 @@ export class TransactionValidation {
 
   static readonly NOTIF: ZodType = z.object({
     transactionId: z.string(),
+    signatureKey: z.string(),
     transactionStatus: z.string(),
     fraudStatus: z.string(),
     statusCode: z.string(),

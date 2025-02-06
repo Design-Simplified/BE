@@ -108,7 +108,7 @@ export class TransactionUtils {
       )
       .digest('hex');
 
-    if (data.signature_key !== hash) {
+    if (data.signatureKey !== hash) {
       throw new ResponseError(StatusCodes.BAD_REQUEST, 'Invalid Signature Key');
     }
 
