@@ -70,6 +70,7 @@ export class TransactionController {
         statusCode: req.body.status_code,
         grossAmount: req.body.gross_amount,
         paymentType: req.body.payment_type,
+        signatureKey: req.body.signature_key,
       } as ITransactionNotifRequest;
 
       await TransactionService.transactionNotif(request);
