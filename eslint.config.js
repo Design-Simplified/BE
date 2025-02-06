@@ -19,7 +19,7 @@ const compat = new FlatCompat({
 
 export default [
   {
-    ignores: ['node_modules/', 'dist/', 'build/', 'logs/', 'tests/', 'jest.config.ts'],
+    ignores: ['node_modules/', 'dist/', 'build/', 'logs/', 'tests/', 'jest.config.ts', 'prisma/'],
   },
   {
     files: ['**/*.ts', '**/*.tsx'],

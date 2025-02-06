@@ -8,8 +8,8 @@ export class TransactionItemRepository {
     transactionId: string,
     items: {
       amount: number;
-      couponPackageId?: number | null;
-      membershipTypeId?: number | null;
+      couponPackageId?: string | null;
+      membershipTypeId?: string | null;
     }[],
     tx: Prisma.TransactionClient = db,
   ) {
@@ -30,6 +30,21 @@ export class TransactionItemRepository {
     return tx.transactionItem.findUnique({
       where: {
         id: id,
+      },
+      include: {
+        couponPackage: true,
+        membershipType: true,
+      },
+    });
+  }
+
+  static async findByTransactionId(
+    transactionId: string,
+    tx: Prisma.TransactionClient = db,
+  ) {
+    return tx.transactionItem.findMany({
+      where: {
+        transactionId: transactionId,
       },
       include: {
         couponPackage: true,

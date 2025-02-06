@@ -3,8 +3,8 @@ export interface ICreateTransactionRequest {
   username: string;
   userState: string;
   userEmail?: string;
-  couponPackageId?: number;
-  membershipTypeId?: number;
+  couponPackageId?: string;
+  membershipTypeId?: string;
 }
 
 export interface ICreateTransactionResponse {

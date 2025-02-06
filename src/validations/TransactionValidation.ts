@@ -7,8 +7,8 @@ export class TransactionValidation {
     username: z.string(),
     userState: z.string(),
     userEmail: z.string().email().optional().nullish(),
-    couponPackageId: z.number().optional().nullish(),
-    membershipTypeId: z.number().optional().nullish(),
+    couponPackageId: z.string().optional().nullish(),
+    membershipTypeId: z.string().optional().nullish(),
   });
 
   static readonly NOTIF: ZodType = z.object({

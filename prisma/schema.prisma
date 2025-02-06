@@ -53,7 +53,7 @@ model Membership {
   userId           String          @unique @map("user_id")
   startDate        DateTime?       @map("start_date")
   endDate          DateTime?       @map("end_date")
-  membershipTypeId Int?            @map("membership_type_id")
+  membershipTypeId String?         @map("membership_type_id")
   createdAt        DateTime        @default(now()) @map("created_at")
   updatedAt        DateTime        @updatedAt @map("updated_at")
   membershipType   MembershipType? @relation(fields: [membershipTypeId], references: [id])
@@ -86,9 +86,10 @@ model Role {
 }
 
 model MembershipType {
-  id              Int               @id @default(autoincrement()) @map("id")
+  id              String            @id @map("id")
   name            String            @map("name")
   price           Int               @map("price")
+  duration_in_day Int               @map("duration_in_day")
   createdAt       DateTime          @default(now()) @map("created_at")
   updatedAt       DateTime          @updatedAt @map("updated_at")
   memberships     Membership[]      @relation
@@ -119,7 +120,7 @@ model SubNiche {
 }
 
 model CouponPackage {
-  id              Int               @id @default(autoincrement()) @map("id")
+  id              String            @id @map("id")
   name            String            @map("name")
   price           Int               @map("price")
   total_coupons   Int               @map("total_coupons")
@@ -154,8 +155,8 @@ model TransactionItem {
   id               String          @id @map("id")
   transactionId    String          @map("transaction_id")
   amount           Int             @map("amount")
-  couponPackageId  Int?            @map("coupon_package_id")
-  membershipTypeId Int?            @map("membership_type_id")
+  couponPackageId  String?         @map("coupon_package_id")
+  membershipTypeId String?         @map("membership_type_id")
   createdAt        DateTime        @default(now()) @map("created_at")
   updatedAt        DateTime        @updatedAt @map("updated_at")
   transaction      Transaction     @relation(fields: [transactionId], references: [id])

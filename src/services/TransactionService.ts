@@ -17,6 +17,7 @@ import {
   MembershipTypeRepository,
 } from '../repositories';
 import { PaymentUtils } from '../utils/payment-utils';
+import { TransactionUtils } from '../utils/transaction-utils';
 import { Validator } from '../utils/validator';
 import { TransactionValidation } from '../validations';
 
@@ -263,7 +264,7 @@ export class TransactionService {
     TransactionRepository.findById(validData.transactionId).then(
       transaction => {
         if (transaction) {
-          console.log(validData);
+          TransactionUtils.actionAfterTransaction(transaction, validData);
         }
       },
     );
