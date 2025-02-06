@@ -83,13 +83,25 @@ export class TransactionUtils {
         );
       }
 
+      const userMembership = await MembershipRepository.findByUserId(
+        transaction.userId,
+        tx,
+      );
+
+      if (!userMembership) {
+        throw new ResponseError(
+          StatusCodes.NOT_FOUND,
+          'User membership not found',
+        );
+      }
+
       const duration = membershipType.duration_in_day;
       const endDate = new Date();
 
       endDate.setDate(endDate.getDate() + duration);
 
       await MembershipRepository.update(
-        transaction.userId,
+        userMembership.id,
         {
           membershipType: { connect: { id: membershipType.id } },
           startDate: new Date(),
