@@ -54,10 +54,19 @@ export class TransactionUtils {
         );
       }
 
+      const userWallet = await CouponWalletRepository.findByUserId(
+        transaction.userId,
+        tx,
+      );
+
+      if (!userWallet) {
+        throw new ResponseError(StatusCodes.NOT_FOUND, 'User wallet not found');
+      }
+
       await CouponWalletRepository.update(
         transaction.userId,
         {
-          balance: couponPackage.total_coupons,
+          balance: userWallet.balance + couponPackage.total_coupons,
         },
         tx,
       );
@@ -104,7 +113,7 @@ export class TransactionUtils {
     const hash = crypto
       .createHash('sha512')
       .update(
-        `${transaction.id}${data.StatusCode}${data.grossAmount}${MIDTRANS_SECRET.MIDTRANS_SERVER_KEY}`,
+        `${transaction.id}${data.statusCode}${data.grossAmount}${MIDTRANS_SECRET.MIDTRANS_SERVER_KEY}`,
       )
       .digest('hex');
 

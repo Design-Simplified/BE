@@ -23,6 +23,14 @@ export class CouponWalletRepository {
     });
   }
 
+  static async findByUserId(userId: string, tx: Prisma.TransactionClient = db) {
+    return tx.couponWallet.findFirst({
+      where: {
+        userId: userId,
+      },
+    });
+  }
+
   static async update(
     id: string,
     data: Prisma.CouponWalletUpdateInput,
