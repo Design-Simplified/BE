@@ -15,6 +15,7 @@ import {
   userRoute,
   transactionRoute,
   couponPackageRoute,
+  membershipTypeRoute,
 } from './routes';
 
 const app: Express = express();
@@ -48,6 +49,7 @@ app.use('/api/auth/', authRoute);
 app.use('/api/users/', userRoute);
 app.use('/api/transactions/', transactionRoute);
 app.use('/api/coupon-packages/', couponPackageRoute);
+app.use('/api/membership-types/', membershipTypeRoute);
 app.use(errorMiddleware);
 
 const port = Number(process.env.PORT_SERVER) || 5000;
