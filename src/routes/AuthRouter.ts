@@ -4,6 +4,7 @@ import { AuthController } from '../controllers';
 import { FacebookAuthMiddleware } from '../middlewares/FacebookAuthMiddleware';
 import { GoogleAuthMiddleware } from '../middlewares/GoogleAuthMiddleware';
 import { mainAuthMiddleware } from '../middlewares/MainAuthMiddleware';
+import { RateLimiter } from '../middlewares/RateLimiter';
 
 export const authRoute: Router = Router();
 
@@ -62,7 +63,11 @@ authRoute.get(
   AuthController.loginWithFacebookLocal,
 );
 
-authRoute.get('/email', AuthController.loginWithEmail);
+authRoute.post(
+  '/email',
+  RateLimiter.sendVerificationEmailLimiter,
+  AuthController.loginWithEmail,
+);
 authRoute.get(
   '/email/callback/:emailToken',
   AuthController.loginWithEmailCallback,
