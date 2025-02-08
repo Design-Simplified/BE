@@ -68,6 +68,11 @@ authRoute.post(
   RateLimiter.sendVerificationEmailLimiter,
   AuthController.loginWithEmail,
 );
+authRoute.post(
+  '/local/email',
+  RateLimiter.sendVerificationEmailLimiter,
+  AuthController.loginWithEmailLocal,
+);
 authRoute.get(
   '/email/callback/:emailToken',
   AuthController.loginWithEmailCallback,

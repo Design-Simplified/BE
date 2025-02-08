@@ -136,6 +136,36 @@ export class AuthService {
     }
   }
 
+  static async loginWithEmailLocal(
+    request: ILoginWithEmailRequest,
+  ): Promise<void> {
+    const validData = Validator.validate(
+      UserValidation.LOGIN_WITH_EMAIL,
+      request,
+    );
+
+    const payload = {
+      email: validData.email,
+      state: validData.state,
+    };
+
+    const emailToken = JwtToken.generateEmailToken(payload);
+
+    if (
+      validData.state === UserState.BUYER ||
+      validData.state === UserState.SELLER
+    ) {
+      QueueSender.sendEmail(
+        validData.email,
+        'Login Verification',
+        'Login Verification',
+        `<a href="${process.env.LOGIN_WITH_EMAIL_CALLBACK_LOCAL as string}/${emailToken}">Click here to login</a>`,
+      );
+    } else {
+      throw new ResponseError(StatusCodes.BAD_REQUEST, 'Invalid state');
+    }
+  }
+
   static async loginWithEmailCallback(
     request: IVerifyEmailDTO,
   ): Promise<ILoginResponse> {

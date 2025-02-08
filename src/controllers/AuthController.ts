@@ -119,6 +119,25 @@ export class AuthController {
     }
   }
 
+  static async loginWithEmailLocal(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
+    try {
+      const request = req.body as ILoginWithEmailRequest;
+      await AuthService.loginWithEmailLocal(request);
+
+      successResponse(
+        res,
+        StatusCodes.OK,
+        'Verification email sent successfully',
+      );
+    } catch (error) {
+      next(error);
+    }
+  }
+
   static async loginWithEmailCallback(
     req: Request,
     res: Response,
