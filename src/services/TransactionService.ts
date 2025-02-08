@@ -1,3 +1,4 @@
+import { StatusCodes } from 'http-status-codes';
 import { v4 as uuid } from 'uuid';
 
 import { db as database } from '../configs/database';
@@ -28,13 +29,16 @@ export class TransactionService {
     const validData = Validator.validate(TransactionValidation.CREATE, request);
 
     if (validData.couponPackageId && validData.membershipTypeId) {
-      throw new ResponseError(400, 'Invalid Transaction Request');
+      throw new ResponseError(
+        StatusCodes.BAD_GATEWAY,
+        'Invalid Transaction Request',
+      );
     }
 
     const user = await UserRepository.findById(request.userId);
 
     if (!user) {
-      throw new ResponseError(404, 'User not found');
+      throw new ResponseError(StatusCodes.NOT_FOUND, 'User not found');
     }
 
     let transactionsItems = [];
@@ -45,11 +49,14 @@ export class TransactionService {
       );
 
       if (!couponPackage) {
-        throw new ResponseError(404, 'Coupon package not found');
+        throw new ResponseError(
+          StatusCodes.NOT_FOUND,
+          'Coupon package not found',
+        );
       }
 
       if (validData.userState !== UserState.BUYER) {
-        throw new ResponseError(400, 'You are not a buyer');
+        throw new ResponseError(StatusCodes.BAD_GATEWAY, 'You are not a buyer');
       }
 
       transactionsItems.push({
@@ -61,7 +68,10 @@ export class TransactionService {
       const userMembership = await MembershipRepository.findByUserId(user.id);
 
       if (userMembership.startDate < userMembership.endDate) {
-        throw new ResponseError(400, 'You already have an active membership');
+        throw new ResponseError(
+          StatusCodes.BAD_GATEWAY,
+          'You already have an active membership',
+        );
       }
 
       const membershipType = await MembershipTypeRepository.findById(
@@ -69,11 +79,17 @@ export class TransactionService {
       );
 
       if (!membershipType) {
-        throw new ResponseError(404, 'Membership type not found');
+        throw new ResponseError(
+          StatusCodes.NOT_FOUND,
+          'Membership type not found',
+        );
       }
 
       if (validData.userState !== UserState.SELLER) {
-        throw new ResponseError(400, 'You are not a seller');
+        throw new ResponseError(
+          StatusCodes.BAD_GATEWAY,
+          'You are not a seller',
+        );
       }
 
       transactionsItems.push({
@@ -82,7 +98,10 @@ export class TransactionService {
         name: membershipType.name,
       });
     } else {
-      throw new ResponseError(400, 'Invalid Transaction Request');
+      throw new ResponseError(
+        StatusCodes.BAD_GATEWAY,
+        'Invalid Transaction Request',
+      );
     }
 
     const exchangeRate = 16000;
@@ -145,13 +164,16 @@ export class TransactionService {
     const validData = Validator.validate(TransactionValidation.CREATE, request);
 
     if (validData.couponPackageId && validData.membershipTypeId) {
-      throw new ResponseError(400, 'Invalid Transaction Request');
+      throw new ResponseError(
+        StatusCodes.BAD_GATEWAY,
+        'Invalid Transaction Request',
+      );
     }
 
     const user = await UserRepository.findById(request.userId);
 
     if (!user) {
-      throw new ResponseError(404, 'User not found');
+      throw new ResponseError(StatusCodes.NOT_FOUND, 'User not found');
     }
 
     let transactionsItems = [];
@@ -162,11 +184,14 @@ export class TransactionService {
       );
 
       if (!couponPackage) {
-        throw new ResponseError(404, 'Coupon package not found');
+        throw new ResponseError(
+          StatusCodes.NOT_FOUND,
+          'Coupon package not found',
+        );
       }
 
       if (validData.userState !== UserState.BUYER) {
-        throw new ResponseError(400, 'You are not a buyer');
+        throw new ResponseError(StatusCodes.BAD_GATEWAY, 'You are not a buyer');
       }
 
       transactionsItems.push({
@@ -178,7 +203,10 @@ export class TransactionService {
       const userMembership = await MembershipRepository.findByUserId(user.id);
 
       if (userMembership.startDate < userMembership.endDate) {
-        throw new ResponseError(400, 'You already have an active membership');
+        throw new ResponseError(
+          StatusCodes.BAD_GATEWAY,
+          'You already have an active membership',
+        );
       }
 
       const membershipType = await MembershipTypeRepository.findById(
@@ -186,11 +214,17 @@ export class TransactionService {
       );
 
       if (!membershipType) {
-        throw new ResponseError(404, 'Membership type not found');
+        throw new ResponseError(
+          StatusCodes.NOT_FOUND,
+          'Membership type not found',
+        );
       }
 
       if (validData.userState !== UserState.SELLER) {
-        throw new ResponseError(400, 'You are not a seller');
+        throw new ResponseError(
+          StatusCodes.BAD_GATEWAY,
+          'You are not a seller',
+        );
       }
 
       transactionsItems.push({
@@ -199,7 +233,10 @@ export class TransactionService {
         name: membershipType.name,
       });
     } else {
-      throw new ResponseError(400, 'Invalid Transaction Request');
+      throw new ResponseError(
+        StatusCodes.BAD_GATEWAY,
+        'Invalid Transaction Request',
+      );
     }
 
     const exchangeRate = 16000;

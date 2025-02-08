@@ -11,25 +11,25 @@ const couponPackages = [
     id: `CP-${uuidv4()}`,
     name: 'Basic',
     price: 100,
-    total_coupons: 10,
+    totalCoupons: 10,
   },
   {
     id: `CP-${uuidv4()}`,
     name: 'Premium',
     price: 200,
-    total_coupons: 20,
+    totalCoupons: 20,
   },
   {
     id: `CP-${uuidv4()}`,
     name: 'Gold',
     price: 300,
-    total_coupons: 30,
+    totalCoupons: 30,
   },
   {
     id: `CP-${uuidv4()}`,
     name: 'Diamond',
     price: 400,
-    total_coupons: 40,
+    totalCoupons: 40,
   },
 ];
 

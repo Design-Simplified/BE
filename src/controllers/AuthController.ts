@@ -1,4 +1,5 @@
 import type { Request, Response, NextFunction } from 'express';
+import { StatusCodes } from 'http-status-codes';
 
 import { JWT_CONFIG, OAUTH_SECRET } from '../constants';
 import type { IAuthDTO, IVerifyEmailDTO } from '../dtos/AuthDto';
@@ -108,7 +109,11 @@ export class AuthController {
       const request = req.body as ILoginWithEmailRequest;
       await AuthService.loginWithEmail(request);
 
-      successResponse(res, 200, 'Verification email sent successfully');
+      successResponse(
+        res,
+        StatusCodes.OK,
+        'Verification email sent successfully',
+      );
     } catch (error) {
       next(error);
     }
@@ -175,7 +180,7 @@ export class AuthController {
         secure: true,
         sameSite: 'none',
       });
-      successResponse(res, 200, 'Logout success');
+      successResponse(res, StatusCodes.OK, 'Logout success');
     } catch (error) {
       next(error);
     }

@@ -9,7 +9,13 @@ import { appLogger } from './configs/logger';
 import { currentEnv, Env } from './constants';
 import { clientUrl } from './constants/client-url-constants';
 import { errorMiddleware } from './middlewares/error-middleware';
-import { healthRoute, authRoute, userRoute, transactionRoute } from './routes';
+import {
+  healthRoute,
+  authRoute,
+  userRoute,
+  transactionRoute,
+  couponPackageRoute,
+} from './routes';
 
 const app: Express = express();
 
@@ -41,6 +47,7 @@ app.use('/api/', healthRoute);
 app.use('/api/auth/', authRoute);
 app.use('/api/users/', userRoute);
 app.use('/api/transactions/', transactionRoute);
+app.use('/api/coupon-packages/', couponPackageRoute);
 app.use(errorMiddleware);
 
 const port = Number(process.env.PORT_SERVER) || 5000;

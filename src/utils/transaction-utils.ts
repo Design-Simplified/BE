@@ -66,7 +66,7 @@ export class TransactionUtils {
       await CouponWalletRepository.update(
         userWallet.id,
         {
-          balance: userWallet.balance + couponPackage.total_coupons,
+          balance: userWallet.balance + couponPackage.totalCoupons,
         },
         tx,
       );
@@ -95,7 +95,7 @@ export class TransactionUtils {
         );
       }
 
-      const duration = membershipType.duration_in_day;
+      const duration = membershipType.durationInDay;
       const endDate = new Date();
 
       endDate.setDate(endDate.getDate() + duration);

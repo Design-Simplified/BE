@@ -1,4 +1,5 @@
 import type { Request, Response, NextFunction } from 'express';
+import { StatusCodes } from 'http-status-codes';
 
 import type { IAuthDTO } from '../dtos/AuthDto';
 import type {
@@ -77,7 +78,7 @@ export class TransactionController {
 
       successResponse(
         res,
-        200,
+        StatusCodes.OK,
         'Transaction notification received successfully',
       );
     } catch (error) {

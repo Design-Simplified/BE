@@ -11,25 +11,25 @@ const membershipTypes = [
     id: `MT-${uuidv4()}`,
     name: 'Basic',
     price: 100,
-    duration_in_day: 30,
+    durationInDay: 30,
   },
   {
     id: `MT-${uuidv4()}`,
     name: 'Premium',
     price: 200,
-    duration_in_day: 60,
+    durationInDay: 60,
   },
   {
     id: `MT-${uuidv4()}`,
     name: 'Gold',
     price: 300,
-    duration_in_day: 90,
+    durationInDay: 90,
   },
   {
     id: `MT-${uuidv4()}`,
     name: 'Diamond',
     price: 400,
-    duration_in_day: 120,
+    durationInDay: 120,
   },
 ];
 

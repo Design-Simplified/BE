@@ -25,4 +25,8 @@ export class CouponPackageRepository {
       },
     });
   }
+
+  static async findAll(tx: Prisma.TransactionClient = db) {
+    return tx.couponPackage.findMany();
+  }
 }

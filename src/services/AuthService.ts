@@ -1,3 +1,5 @@
+import { StatusCodes } from 'http-status-codes';
+
 import { db as database } from '../configs/database';
 import { AuthProvider, UserState } from '../constants';
 import type { IAuthDTO, ITokenPayload, IVerifyEmailDTO } from '../dtos/AuthDto';
@@ -143,7 +145,7 @@ export class AuthService {
     const state = payload.state;
 
     if (!email || !state) {
-      throw new ResponseError(401, 'Unauthorized!');
+      throw new ResponseError(StatusCodes.UNAUTHORIZED, 'Unauthorized!');
     }
 
     let user = await UserRepository.findByEmail(email);

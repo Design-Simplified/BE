@@ -25,4 +25,8 @@ export class MembershipTypeRepository {
       },
     });
   }
+
+  static async findAll(tx: Prisma.TransactionClient = db) {
+    return tx.membershipType.findMany();
+  }
 }

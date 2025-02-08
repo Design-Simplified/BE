@@ -89,7 +89,7 @@ model MembershipType {
   id              String            @id @map("id")
   name            String            @map("name")
   price           Int               @map("price")
-  duration_in_day Int               @map("duration_in_day")
+  durationInDay   Int               @map("duration_in_day")
   createdAt       DateTime          @default(now()) @map("created_at")
   updatedAt       DateTime          @updatedAt @map("updated_at")
   memberships     Membership[]      @relation
@@ -123,7 +123,7 @@ model CouponPackage {
   id              String            @id @map("id")
   name            String            @map("name")
   price           Int               @map("price")
-  total_coupons   Int               @map("total_coupons")
+  totalCoupons    Int               @map("total_coupons")
   createdAt       DateTime          @default(now()) @map("created_at")
   updatedAt       DateTime          @updatedAt @map("updated_at")
   TransactionItem TransactionItem[]
