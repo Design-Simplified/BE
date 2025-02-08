@@ -3,3 +3,4 @@ export * from './AuthService';
 export * from './TransactionService';
 export * from './CouponPackageService';
 export * from './MembershipTypeService';
+export * from './UserService';

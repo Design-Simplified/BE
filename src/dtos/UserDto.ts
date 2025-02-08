@@ -6,3 +6,7 @@ export interface ILoginWithEmailRequest {
 export interface ILoginResponse {
   accessToken: string;
 }
+
+export interface IDeleteUserRequest {
+  userId: string;
+}
