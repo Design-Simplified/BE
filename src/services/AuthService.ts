@@ -132,7 +132,7 @@ export class AuthService {
         `<a href="${process.env.LOGIN_WITH_EMAIL_CALLBACK as string}/${emailToken}">Click here to login</a>`,
       );
     } else {
-      throw new ResponseError(400, 'Invalid state');
+      throw new ResponseError(StatusCodes.BAD_REQUEST, 'Invalid state');
     }
   }
 
