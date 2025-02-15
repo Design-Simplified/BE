@@ -57,3 +57,6 @@ tests
 *.diff
 *.patch
 node_modules
+
+# Uploads
+uploads/

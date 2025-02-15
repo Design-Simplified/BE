@@ -19,6 +19,7 @@ export interface IGetUserResponse {
   email: string;
   state: string;
   role: number;
+  photoProfile?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -33,6 +34,11 @@ export interface IUpdateUserResponse {
   username: string;
   createdAt: Date;
   updatedAt: Date;
+}
+
+export interface IUpdatePhotoProfileRequest {
+  userId: string;
+  photoProfile: string;
 }
 
 export interface IDeleteUserRequest {

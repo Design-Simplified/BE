@@ -3,12 +3,13 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 // eslint-disable-next-line
 import express, { Express } from 'express';
+import path from 'path';
 import requestip from 'request-ip';
 
 import { appLogger } from './configs/logger';
 import { currentEnv, Env } from './constants';
 import { clientUrl } from './constants/client-url-constants';
-import { errorMiddleware } from './middlewares/error-middleware';
+import { errorMiddleware } from './middlewares/ErrorMiddleware';
 import {
   healthRoute,
   authRoute,
@@ -43,6 +44,8 @@ app.use(
 
 app.use(express.json());
 app.use(requestip.mw());
+
+app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
 app.use('/api/', healthRoute);
 app.use('/api/auth/', authRoute);

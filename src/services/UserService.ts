@@ -1,3 +1,4 @@
+import fs from 'fs';
 import { StatusCodes } from 'http-status-codes';
 
 import type {
@@ -5,6 +6,7 @@ import type {
   IGetUserResponse,
   IUpdateUserRequest,
   IUpdateUserResponse,
+  IUpdatePhotoProfileRequest,
   IDeleteUserRequest,
 } from '../dtos/UserDto';
 import { ResponseError } from '../error/ResponseError';
@@ -28,6 +30,7 @@ export class UserService {
       email: user.email,
       state: validData.state,
       role: validData.role,
+      photoProfile: user.profilePicture ? user.profilePicture : null,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     };
@@ -54,6 +57,31 @@ export class UserService {
       createdAt: updatedUser.createdAt,
       updatedAt: updatedUser.updatedAt,
     };
+  }
+
+  static async updatePhotoProfile(
+    request: IUpdatePhotoProfileRequest,
+  ): Promise<void> {
+    const validData = Validator.validate(
+      UserValidation.UPDATE_PHOTO_PROFILE,
+      request,
+    );
+
+    const user = await UserRepository.findById(validData.userId);
+
+    if (!user) {
+      throw new ResponseError(StatusCodes.NOT_FOUND, 'User not found');
+    }
+
+    if (user.profilePicture) {
+      if (fs.existsSync(user.profilePicture)) {
+        fs.unlinkSync(user.profilePicture);
+      }
+    }
+
+    await UserRepository.update(user.id, {
+      profilePicture: validData.photoProfile,
+    });
   }
 
   static async deleteUser(request: IDeleteUserRequest): Promise<void> {

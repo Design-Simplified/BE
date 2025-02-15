@@ -182,6 +182,8 @@ export default [
             globalDb: true,
             tx: true,
             dir: true,
+            userDir: true,
+            profileDir: true,
           }
         },
       ],

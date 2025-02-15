@@ -12,9 +12,15 @@ export class UserValidation {
   });
 
   static readonly GET = z.object({
-    userId: z.string(),
-    state: z.string(),
-    role: z.number(),
+    userId: z.string({
+      required_error: 'User ID is required',
+    }),
+    state: z.string({
+      required_error: 'State is required',
+    }),
+    role: z.number({
+      required_error: 'Role is required',
+    }),
   });
 
   static readonly UPDATE = z.object({
@@ -24,7 +30,16 @@ export class UserValidation {
         invalid_type_error: 'Username is not valid',
         required_error: 'Username is required',
       })
-      .max(255, 'Username must not exceed 255 characters')
-      .optional(),
+      .max(255, 'Username must not exceed 255 characters'),
+  });
+
+  static readonly UPDATE_PHOTO_PROFILE = z.object({
+    userId: z.string({
+      required_error: 'User ID is required',
+    }),
+    photoProfile: z.string({
+      invalid_type_error: 'Photo profile is not valid',
+      required_error: 'Photo profile is required',
+    }),
   });
 }

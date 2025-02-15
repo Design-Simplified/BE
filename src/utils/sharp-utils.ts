@@ -2,17 +2,38 @@ import fs from 'fs';
 import path from 'path';
 import sharp from 'sharp';
 
+import { TimeUtils } from './time-utils';
+
 export class SharpUtils {
-  static async resizeImage(imagePath: string): Promise<string> {
-    const dir = path.dirname(imagePath);
-    const extension = path.extname(imagePath);
-    const name = path.basename(imagePath, extension);
+  static async resizePhotoProfile(
+    uploadPath: string,
+    userId: string,
+  ): Promise<string> {
+    try {
+      const dir = path.dirname(uploadPath);
+      const userDir = path.join(dir, 'users', userId);
+      const profileDir = path.join(userDir, 'photo_profile');
+      const extension = path.extname(uploadPath);
+      const newImagePath = path.join(
+        profileDir,
+        `${TimeUtils.getTimeStringStamp()}_photo_profile_${userId}${extension}`,
+      );
 
-    const newImagePath = path.join(dir, `resized_${name}${extension}`);
-    await sharp(imagePath).resize(1920, 1080).toFile(newImagePath);
+      if (!fs.existsSync(userDir)) {
+        fs.mkdirSync(userDir, { recursive: true });
+      }
 
-    fs.unlinkSync(imagePath);
+      if (!fs.existsSync(profileDir)) {
+        fs.mkdirSync(profileDir, { recursive: true });
+      }
 
-    return newImagePath;
+      await sharp(uploadPath).resize(1000, 1000).toFile(newImagePath);
+
+      fs.unlinkSync(uploadPath);
+
+      return newImagePath;
+    } catch (error) {
+      throw error;
+    }
   }
 }
