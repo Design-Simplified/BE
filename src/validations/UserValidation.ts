@@ -10,4 +10,21 @@ export class UserValidation {
       .email(),
     state: z.string(),
   });
+
+  static readonly GET = z.object({
+    userId: z.string(),
+    state: z.string(),
+    role: z.number(),
+  });
+
+  static readonly UPDATE = z.object({
+    userId: z.string(),
+    username: z
+      .string({
+        invalid_type_error: 'Username is not valid',
+        required_error: 'Username is required',
+      })
+      .max(255, 'Username must not exceed 255 characters')
+      .optional(),
+  });
 }

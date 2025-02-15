@@ -181,6 +181,7 @@ export default [
             db: true,
             globalDb: true,
             tx: true,
+            dir: true,
           }
         },
       ],
