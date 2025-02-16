@@ -30,7 +30,7 @@ export class TransactionService {
 
     if (validData.couponPackageId && validData.membershipTypeId) {
       throw new ResponseError(
-        StatusCodes.BAD_GATEWAY,
+        StatusCodes.BAD_REQUEST,
         'Invalid Transaction Request',
       );
     }
@@ -69,7 +69,7 @@ export class TransactionService {
 
       if (userMembership.startDate < userMembership.endDate) {
         throw new ResponseError(
-          StatusCodes.BAD_GATEWAY,
+          StatusCodes.CONFLICT,
           'You already have an active membership',
         );
       }
@@ -86,10 +86,7 @@ export class TransactionService {
       }
 
       if (validData.userState !== UserState.SELLER) {
-        throw new ResponseError(
-          StatusCodes.BAD_GATEWAY,
-          'You are not a seller',
-        );
+        throw new ResponseError(StatusCodes.FORBIDDEN, 'You are not a seller');
       }
 
       transactionsItems.push({
@@ -99,7 +96,7 @@ export class TransactionService {
       });
     } else {
       throw new ResponseError(
-        StatusCodes.BAD_GATEWAY,
+        StatusCodes.BAD_REQUEST,
         'Invalid Transaction Request',
       );
     }
@@ -165,7 +162,7 @@ export class TransactionService {
 
     if (validData.couponPackageId && validData.membershipTypeId) {
       throw new ResponseError(
-        StatusCodes.BAD_GATEWAY,
+        StatusCodes.BAD_REQUEST,
         'Invalid Transaction Request',
       );
     }
@@ -204,7 +201,7 @@ export class TransactionService {
 
       if (userMembership.startDate < userMembership.endDate) {
         throw new ResponseError(
-          StatusCodes.BAD_GATEWAY,
+          StatusCodes.CONFLICT,
           'You already have an active membership',
         );
       }
@@ -221,10 +218,7 @@ export class TransactionService {
       }
 
       if (validData.userState !== UserState.SELLER) {
-        throw new ResponseError(
-          StatusCodes.BAD_GATEWAY,
-          'You are not a seller',
-        );
+        throw new ResponseError(StatusCodes.FORBIDDEN, 'You are not a seller');
       }
 
       transactionsItems.push({
@@ -234,7 +228,7 @@ export class TransactionService {
       });
     } else {
       throw new ResponseError(
-        StatusCodes.BAD_GATEWAY,
+        StatusCodes.BAD_REQUEST,
         'Invalid Transaction Request',
       );
     }
